@@ -7,6 +7,9 @@ const App = () => {
  const[title,setTitle] = useState("");
  const[amount,setAmount] = useState("");
  const[expenses, setExpenses] = useState([]);
+ const[editingId, seteditingId] = useState(null);
+ const[editTitle, setEditTitle] = useState("");
+ const[editAmount, setEditAmount] = useState("");
  
 
   useEffect(()=>{
@@ -100,6 +103,42 @@ async function handleDeleteExpense(id) {
   }
 }
 
+async function handleUpdateExpense(id) {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/expenses/${id}`,
+      {
+        method:"PUT",
+        headers:{
+          "Content-Type":"application/json",
+        }
+      },
+      body.JSON.stringify({
+        title:editTitle,
+        amount:Number(editAmount),
+      }),
+      
+    );
+    const data = await response.json();
+
+    if(response.ok){
+      alert(data.message);
+      return;
+    }
+
+    setExpenses((previousExpenses)=>
+    previousExpenses.map((expense)=>
+    expense._id === id ? data.expense:expense)
+  );
+  seteditingId(null);
+  setEditTitle("");
+  setEditAmount("");
+
+  } catch (error) {
+    console.log("Error updating Expense:", error);
+  }
+}
+
 
  const totalExpenses = expenses.reduce(
   (total,expense)=>total + expense.amount,0
@@ -170,7 +209,7 @@ async function handleDeleteExpense(id) {
 
                <span className='expense-amount'
                >₹{expense.amount}</span>
-               
+
                <button className='delete-btn'
                onClick={()=>handleDeleteExpense(expense._id)}
                >Delete</button>

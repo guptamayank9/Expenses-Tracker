@@ -149,7 +149,7 @@ h1{
 }
 /* Scrollbar design */
 .expenses-card::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .expenses-card::-webkit-scrollbar-track {

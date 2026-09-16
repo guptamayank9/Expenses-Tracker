@@ -67,8 +67,48 @@ const deleteExpense = async (req, res) => {
   }
 };
 
+//update the Expenses
+const updateExpense = async (req,res) => {
+    try {
+        const {id} = req.params;
+       const {title,amount} = req.body;
+
+       if(!title || amount=== undefined || amount== ""){
+        return res.status(400).json({
+            message:"Title and amount are required",
+        });
+       }
+
+    const update = await Expense.findByIdAndUpdate(
+        id,
+        {
+            title:title,
+            amount:Number(amount),
+        },
+        {
+            new:true,
+            runValidators:true,
+        }
+    );
+
+    res.status(200).json({
+        message:"Expense Updated successfully",
+        expense:updateExpense,
+    });
+
+
+    } catch (error) {
+        res.status(500).json({
+            message:"Failed to update Expense"
+        });
+    }
+};
+
+
+
 module.exports={
     getExpenses,
     addExpense,
     deleteExpense,
+    updateExpense,
 };
